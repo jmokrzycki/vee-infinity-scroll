@@ -8,48 +8,38 @@ type InfiniteScrollProps = {
 const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ list }) => {
   const [tempArray, setTempArray] = useState<JSX.Element[]>([]);
 
-  const cards = document.querySelectorAll(".card");
-
   function loadNewCards() {
     const newArray = [...tempArray, list[tempArray.length]];
     setTempArray(newArray);
   }
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        entry.target.classList.toggle("show", entry.isIntersecting);
-      });
-    }, {});
-
-    cards.forEach((card) => {
-      observer.observe(card);
-    });
-
-    const lastCardObserver = new IntersectionObserver((entries) => {
-      const lastCard = entries[0];
-      if (!lastCard.isIntersecting) return;
-      if (tempArray.length !== list.length) loadNewCards();
-      lastCardObserver.unobserve(lastCard.target);
-
-      const newLastCard = document.querySelector(".card:last-child");
-      if (newLastCard !== null) {
-        lastCardObserver.observe(newLastCard);
+    const lastCardObserver = new IntersectionObserver(
+      (entries) => {
+        console.log("last card observer");
+        const lastCard = entries[0];
+        if (!lastCard.isIntersecting) return;
+        if (tempArray.length !== list.length) loadNewCards();
+        lastCard.target.classList.toggle("show", lastCard.isIntersecting);
+        lastCardObserver.unobserve(lastCard.target);
+      },
+      {
+        rootMargin: "200px",
       }
-    });
+    );
 
     const newLastCard = document.querySelector(".card:last-child");
     if (newLastCard !== null) {
       lastCardObserver.observe(newLastCard);
     }
-  });
+  }, [tempArray]);
 
   return (
     <div className="card-container">
-      <div className="card show">test</div>
+      <div className="card show"></div>
       {tempArray.map((item, index) => {
         return (
-          <div key={index} className="card show">
+          <div key={index} className="card">
             {item}
           </div>
         );
