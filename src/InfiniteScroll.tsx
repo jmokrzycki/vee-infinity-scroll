@@ -8,18 +8,17 @@ type InfiniteScrollProps = {
 const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ list }) => {
   const [tempArray, setTempArray] = useState<JSX.Element[]>([]);
 
-  function loadNewCards() {
-    const newArray = [...tempArray, list[tempArray.length]];
-    setTempArray(newArray);
-  }
+  useEffect(() => {
+    if (list.length === 0) return;
+    setTempArray([list[0]]);
+  }, [list]);
 
   useEffect(() => {
     const lastCardObserver = new IntersectionObserver(
       (entries) => {
-        console.log("last card observer");
         const lastCard = entries[0];
         if (!lastCard.isIntersecting) return;
-        if (tempArray.length !== list.length) loadNewCards();
+        setTempArray([...tempArray, list[tempArray.length]]);
         lastCard.target.classList.toggle("show", lastCard.isIntersecting);
         lastCardObserver.unobserve(lastCard.target);
       },
@@ -32,18 +31,18 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ list }) => {
     if (newLastCard !== null) {
       lastCardObserver.observe(newLastCard);
     }
-  }, [tempArray]);
+  }, [tempArray, list]);
 
   return (
     <div className="card-container">
-      <div className="card show"></div>
-      {tempArray.map((item, index) => {
-        return (
-          <div key={index} className="card">
-            {item}
-          </div>
-        );
-      })}
+      {tempArray.length > 0 &&
+        tempArray.map((item, index) => {
+          return (
+            <div key={index} className="card">
+              {item}
+            </div>
+          );
+        })}
     </div>
   );
 };
