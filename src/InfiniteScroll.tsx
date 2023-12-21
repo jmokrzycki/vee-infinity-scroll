@@ -1,12 +1,13 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import "./App.css";
 
 type InfiniteScrollProps = {
-  list: JSX.Element[];
+  children: React.ReactNode[];
+  fetch: () => void;
 };
 
-const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ list }) => {
-  const [tempArray, setTempArray] = useState<JSX.Element[]>([]);
+const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ fetch, children }) => {
+  console.log(children);
 
   const lastCardObserver = useMemo(
     () =>
@@ -14,44 +15,27 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ list }) => {
         (entries) => {
           const lastCard = entries[0];
           if (!lastCard.isIntersecting) return;
-          setTempArray((prevTempArray) => [...prevTempArray, list[prevTempArray.length]]);
-          lastCard.target.classList.toggle("show", lastCard.isIntersecting);
+          fetch();
+          lastCard.target.classList.toggle("effect", false);
           lastCardObserver.unobserve(lastCard.target);
         },
         {
           rootMargin: "200px",
         }
       ),
-    [list]
+    []
   );
 
   useEffect(() => {
-    if (list.length === 0) return;
-    setTempArray([list[0]]);
-  }, [list]);
+    const newLastCard = document.querySelector(".infinite-scroll > :last-child");
 
-  useEffect(() => {
-    if (tempArray.length > list.length) return;
-
-    const newLastCard = document.querySelector(".card:last-child");
     if (newLastCard !== null) {
       lastCardObserver.observe(newLastCard);
+      newLastCard.classList.toggle("effect", true);
     }
-  }, [tempArray, list]);
+  }, [children]);
 
-  return (
-    <div className="card-container">
-      {tempArray.length > 0 &&
-        tempArray.map((item, index) => {
-          return (
-            <div key={index} className="card">
-              {item}
-              {index}
-            </div>
-          );
-        })}
-    </div>
-  );
+  return <div className="infinite-scroll">{children}</div>;
 };
 
 export default InfiniteScroll;

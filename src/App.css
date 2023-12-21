@@ -12,3 +12,7 @@
   transform: translateX(0);
   opacity: 1;
 }
+
+.card.effect {
+  background-color: red;
+}
