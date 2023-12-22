@@ -1,39 +1,24 @@
 import React, { useState } from "react";
 import "./App.css";
-import { faker } from "@faker-js/faker";
+import MockApi from "./MockApi";
 import InfiniteScroll from "./InfiniteScroll";
 
 function App() {
-  const [type, setType] = useState<boolean>(false);
-  const [testArray, setTestArray] = useState<React.ReactNode[]>([<>1</>, <>2</>]);
-  const [originalArray, setOriginalArray] = useState<React.ReactNode[]>([]);
+  const mockApi = new MockApi(100, 10);
+  const [originalArray, setOriginalArray] = useState<React.ReactNode[]>(mockApi.getMoreData());
 
-  const originalArrayTemp: React.ReactNode[] = Array(10)
-    .fill({})
-    .map(() => (
-      <>
-        <h1>{faker.person.fullName()}</h1>
-        <h2>{faker.person.lastName()}</h2>
-        <h3>{faker.person.jobTitle()}</h3>
-        <p>{faker.person.bio()}</p>
-      </>
-    ));
-
-  useState(() => {
-    setOriginalArray(originalArrayTemp);
-  });
-
-  function fetch() {
-    setOriginalArray((prevOriginalArrayTemp) => [...prevOriginalArrayTemp, <>New card</>]);
-  }
+  const fetch = () => {
+    const newData = mockApi.getMoreData();
+    if (newData.length === 0) return;
+    setOriginalArray((prevOriginalArrayTemp) => [...prevOriginalArrayTemp, ...newData]);
+  };
 
   return (
     <>
-      <InfiniteScroll fetch={() => fetch()}>
+      <InfiniteScroll fetch={fetch}>
         {originalArray.map((item, index) => (
           <div key={index} className="card show">
-            {item}
-            {index}
+            {item}[{index}]
           </div>
         ))}
       </InfiniteScroll>

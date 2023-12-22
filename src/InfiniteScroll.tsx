@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, forwardRef } from "react";
 import "./App.css";
 
 type InfiniteScrollProps = {
@@ -7,8 +7,6 @@ type InfiniteScrollProps = {
 };
 
 const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ fetch, children }) => {
-  console.log(children);
-
   const lastCardObserver = useMemo(
     () =>
       new IntersectionObserver(
@@ -20,7 +18,7 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ fetch, children }) => {
           lastCardObserver.unobserve(lastCard.target);
         },
         {
-          rootMargin: "200px",
+          rootMargin: "500px",
         }
       ),
     []
