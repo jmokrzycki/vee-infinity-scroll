@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from "react";
-import "./App.scss";
 
 type InfiniteScrollProps = {
   children: React.ReactNode[];
@@ -20,16 +19,19 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ fetch, children }) => {
           rootMargin: "500px",
         }
       ),
-    []
+    [fetch]
   );
 
   useEffect(() => {
     const newLastCard = document.querySelector(".infinite-scroll > :last-child");
 
-    if (newLastCard !== null) {
-      lastCardObserver.observe(newLastCard);
-    }
-  }, [children]);
+    if (newLastCard === null) return;
+    lastCardObserver.observe(newLastCard);
+
+    return () => {
+      lastCardObserver.disconnect();
+    };
+  }, [children, lastCardObserver]);
 
   return <div className="infinite-scroll">{children}</div>;
 };
