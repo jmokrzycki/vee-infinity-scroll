@@ -71,7 +71,7 @@ body {
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     .infinite-scroll {
       .card {
         width: calc(40% - 20px);
@@ -79,7 +79,7 @@ body {
     }
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 650px) {
     .infinite-scroll {
       .card {
         width: 100%;
