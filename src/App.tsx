@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import "./App.css";
+import "./App.scss";
 import MockApi from "./MockApi";
 import InfiniteScroll from "./InfiniteScroll";
 import { UserData } from "./Types";
 
 function App() {
-  const mockApi = useMemo(() => new MockApi(2000, 10), []);
+  const mockApi = useMemo(() => new MockApi(2000, 6), []);
   const [data, setData] = useState<UserData[]>(() => mockApi.getMoreData());
 
   const updateData = useCallback(() => {
@@ -30,12 +30,12 @@ function App() {
     <>
       <InfiniteScroll fetch={fetch}>
         {data.map((item, index) => (
-          <div key={item.uuid} className="card show">
-            <h1>{item.fullName}</h1>
-            <h2>{item.lastName}</h2>
-            <h3>{item.jobTitle}</h3>
-            <p>{item.bio}</p>
-            <p>{item.uuid}</p>
+          <div key={item.uuid} className="card">
+            <p className="full-name">{item.fullName}</p>
+            <p className="last-name">{item.lastName}</p>
+            <p className="job-title">{item.jobTitle}</p>
+            <p className="bio">{item.bio}</p>
+            <p className="uuid">{item.uuid}</p>
             {[index]}
           </div>
         ))}

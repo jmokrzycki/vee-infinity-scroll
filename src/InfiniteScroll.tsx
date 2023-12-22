@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import "./App.css";
+import "./App.scss";
 
 type InfiniteScrollProps = {
   children: React.ReactNode[];
@@ -14,7 +14,6 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ fetch, children }) => {
           const lastCard = entries[0];
           if (!lastCard.isIntersecting) return;
           fetch();
-          lastCard.target.classList.toggle("effect", false);
           lastCardObserver.unobserve(lastCard.target);
         },
         {
@@ -29,7 +28,6 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({ fetch, children }) => {
 
     if (newLastCard !== null) {
       lastCardObserver.observe(newLastCard);
-      newLastCard.classList.toggle("effect", true);
     }
   }, [children]);
 
