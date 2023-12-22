@@ -1,4 +1,4 @@
-import { useEffect, useMemo, forwardRef } from "react";
+import { useEffect, useMemo } from "react";
 import "./App.css";
 
 type InfiniteScrollProps = {
